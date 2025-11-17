@@ -60,4 +60,23 @@ public class UsuarioDAO {
 
         return null;
     }
+
+    public boolean atualizarSenha(int userId, String novaSenhaHash) {
+        String sql = "UPDATE tb_usuario SET password_hash = ? WHERE usuario_id = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, novaSenhaHash);
+            ps.setInt(2, userId);
+
+            int rows = ps.executeUpdate();
+            return rows > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao atualizar senha: " + e.getMessage());
+            return false;
+        }
+    }
+
 }

@@ -38,11 +38,24 @@ public class AuthService {
             return;
         }
 
+        // Gera senha nova de 6 dígitos
         int codigo = 100000 + random.nextInt(900000);
+        String novaSenha = String.valueOf(codigo);
 
-        System.out.println("\n--- RECUPERAÇÃO DE SENHA ---");
-        System.out.println("Email de recuperação enviado para: " + email);
-        System.out.println("Código (simulado): " + codigo);
-        System.out.println("--------------------------------\n");
+        // Hash da nova senha
+        String novaSenhaHash = HashUtils.hash(novaSenha);
+
+        // Atualiza no banco
+        boolean ok = usuarioDAO.atualizarSenha(user.getId(), novaSenhaHash);
+
+        if (ok) {
+            System.out.println("\n--- RECUPERAÇÃO DE SENHA ---");
+            System.out.println("Uma nova senha foi gerada!");
+            System.out.println("Sua nova senha é: " + novaSenha);
+            System.out.println("Use-a para fazer login e depois altere se desejar.");
+            System.out.println("--------------------------------\n");
+        } else {
+            System.out.println("Erro ao atualizar a senha.");
+        }
     }
 }
